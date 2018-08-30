@@ -13,6 +13,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -44,7 +45,6 @@ public class PdsController {
 		//     {pagecount: 2}
 		//     {pagegrpnum : 1}
 		
-		List<MenuVo> menuList  = menuService.getList();
 		List<PdsVo>  pdsList   = pdsService.getList(map);     //몽땅 들고옴,paging도 처리
 		PdsVo        pagePdsVo = (PdsVo)map.get("pagePdsVo"); //
 		System.out.println("endPageNum:" +map.get("pagePdsVo"));
@@ -52,7 +52,7 @@ public class PdsController {
 		System.out.println("endnum:" +vo.getPageendnum());
 		ModelAndView mv = new ModelAndView();
 		mv.addObject("pagePdsVo", vo);
-		mv.addObject("menuList", menuList);
+		//mv.addObject("menuList", menuList);
 		mv.addObject("pdsList",  pdsList);
 
 		System.out.println("startnum:" + pagePdsVo.getPagestartnum());
@@ -64,19 +64,20 @@ public class PdsController {
 
 	//글입력
 	@RequestMapping("/PDS/WriteForm")
-	public ModelAndView pdsWriteForm(@RequestParam HashMap<String, Object> map) {
+	public ModelAndView pdsWriteForm(@RequestParam HashMap<String, Object> map,
+			HttpServletRequest request) {
 		ModelAndView mv = new ModelAndView();
 
-		List<MenuVo> menuList = menuService.getList();
-		
-		map.put("user_id", "sky");
+		//로그인 정보
+		HttpSession session = request.getSession();
+		String login_id = (String) session.getAttribute("userid");
+		map.put("user_id", login_id);
 		
 		MenuVo menuVo = menuService.selectMenu(map);
 		
 		mv.setViewName("pds/write");
 		mv.addObject("map", map);       //request 정보들
 		mv.addObject("menuVo", menuVo); //선택한 메뉴정보 전달
-		mv.addObject("menuList", menuList);
 		return mv;
 	}
 	
@@ -84,8 +85,7 @@ public class PdsController {
 	@RequestMapping(value="/PDS/Write")
 	public ModelAndView pdsWrite(@RequestParam HashMap<String, Object> map,
 			HttpServletRequest request) {
-		
-		//List<MenuVo> menuList = menuService.getList();
+
 		System.out.println(map);
 		//{lvl=0, par_id=0, nref=0, menu_name=사회, bnum=0, step=0, writer=1, title=테스트, cont=파일테스트, menu_id=MENU01}
 		System.out.println(request);
@@ -104,33 +104,37 @@ public class PdsController {
 	
 	//내용보기
 	@RequestMapping("PDS/Content")
-	public ModelAndView pdsView(@RequestParam HashMap<String, Object> map) {
-		//idx, menu_id 들어옴
+	public ModelAndView pdsView(@RequestParam HashMap<String, Object> map,
+			HttpServletRequest request) {
 		
+		//idx, menu_id 들어옴
 		List<MenuVo> menuList  = menuService.getList();
 		PdsVo        pdsVo     = pdsService.getContent(map);
 		List<FileVo> filesList = pdsService.getFiles(map);
 		
+		//로그인 정보
+		HttpSession session = request.getSession();
+		String login_id = (String) session.getAttribute("userid");
+		//map.put("user_id", login_id);
+		
 		ModelAndView mv = new ModelAndView();
 		
-		System.out.println("nowpage:" +map.get("nowpage"));
-		System.out.println("pagegrpnum:" +map.get("pagegrpnum"));
+		mv.addObject("user_id", login_id);
 		
 		mv.addObject("menuList", menuList); //메뉴처리
 		mv.addObject("pdsVo", pdsVo);
 		mv.addObject("filesList", filesList);
 		mv.addObject("nowpage", map.get("nowpage"));
 		mv.addObject("pagegrpnum", map.get("pagegrpnum"));
-/*		map.put("pagecount", 2);
-		mv.addObject("pagecount", map.get("pagecount"));*/
+
+		
 		mv.setViewName("pds/content");
 		return mv;
 	}
 	
 	@RequestMapping("PDS/UpdateForm")
 	public ModelAndView pdsUpdateForm(@RequestParam HashMap<String, Object> map) {
-		
-		//List<MenuVo> menuList  = menuService.getList();
+
 		PdsVo pdsVo = pdsService.getContent(map);
 		List<FileVo> filesList = pdsService.getFiles(map);
 		MenuVo menuVo = menuService.selectMenu(map);

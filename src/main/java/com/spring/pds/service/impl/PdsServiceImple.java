@@ -38,7 +38,7 @@ public class PdsServiceImple implements PdsService {
 		//페이징 처리를 위한 내용 추가
 		int pagetotalcount = 5; //[이전] 1 2 3 4 5 6 7 8 9 10 [다음]
 		//페이지 번호의 갯수 paging.jspf의 for문에 사용
-		int pagecount = 2;//한페이지에 보여줄 게시물 라인(줄)수
+		int pagecount = 5;//한페이지에 보여줄 게시물 라인(줄)수
 		//int pagecount = Integer.parseInt((String) map.get("pagecount")); ; //한페이지에 보여줄 게시물 라인(줄)수
 		//Object 타입은 직접적으로 int로 바꾸면 잘 안바꿔지기 때문에
 		map.put("pagecount", pagecount); //db에 전달하려고 보관

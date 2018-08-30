@@ -23,8 +23,12 @@ public class BoardController {
 	@Autowired
 	private MenuService menuService;
 
-		
 	@RequestMapping("/")
+	public String first() {
+		return "redirect:/Login";
+	}
+	
+	@RequestMapping("/Home")
 	public String home() {
 		return "home";
 	}

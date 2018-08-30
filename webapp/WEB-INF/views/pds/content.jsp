@@ -8,9 +8,9 @@
 <title>Insert title here</title>
 </head>
 <body>
+	<h2>내용보기</h2>
 	<!-- 메뉴영역 -->
 	<%@include file="/WEB-INF/include/menus.jspf" %>
-	<h2>내용보기</h2>
 	<table border="1" cellpadding="0" cellspacing="0" width="500" align="center">
 		<caption>
 			<h2>${pdsVo.menu_name}게시물 내용보기</h2>
@@ -67,8 +67,14 @@
 				<a href="/PDS/List?menu_id=${pdsVo.menu_id}&nowpage=${nowpage}&pagegrpnum=${pagegrpnum}">목록</a>&nbsp;&nbsp;
 				<a href="/PDS/WriteForm?bnum=0&lvl=0&step=0&nref=0&par_id=0&menu_id=${pdsVo.menu_id}&reply=0&nowpage=${nowpage}&pagegrpnum=${pagegrpnum}">새글쓰기</a>&nbsp;&nbsp;
 				<a href="/PDS/WriteForm?bnum=${pdsVo.bnum}&lvl=${pdsVo.lvl}&step=${pdsVo.step}&nref=${pdsVo.nref}&par_id=${pdsVo.idx}&menu_id=${pdsVo.menu_id}&reply=1&nowpage=${nowpage}&pagegrpnum=${pagegrpnum}">답글쓰기</a>&nbsp;&nbsp;
-				<a href="/PDS/UpdateForm?idx=${pdsVo.idx}&menu_id=${pdsVo.menu_id}&nowpage=${nowpage}&pagegrpnum=${pagegrpnum}">수정</a>&nbsp;&nbsp;
-				<a href="/PDS/Delete?idx=${pdsVo.idx}&nref=${pdsVo.nref}&lvl=${pdsVo.lvl}&step=${pdsVo.step}&menu_id=${pdsVo.menu_id}&par_id=${pdsVo.par_id}&nowpage=${nowpage}&pagegrpnum=${pagegrpnum}">삭제</a>&nbsp;&nbsp;
+				<c:choose>
+					<c:when test="${user_id eq pdsVo.writer}">
+						<a href="/PDS/UpdateForm?idx=${pdsVo.idx}&menu_id=${pdsVo.menu_id}&nowpage=${nowpage}&pagegrpnum=${pagegrpnum}">수정</a>&nbsp;&nbsp;
+						<a href="/PDS/Delete?idx=${pdsVo.idx}&nref=${pdsVo.nref}&lvl=${pdsVo.lvl}&step=${pdsVo.step}&menu_id=${pdsVo.menu_id}&par_id=${pdsVo.par_id}&nowpage=${nowpage}&pagegrpnum=${pagegrpnum}">삭제</a>&nbsp;&nbsp;
+					</c:when>
+					<c:otherwise>
+					</c:otherwise>
+				</c:choose>
 			</td>
 		</tr>
 	</table>
