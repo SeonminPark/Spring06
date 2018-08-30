@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+  <mapper namespace="Menu">
+  	<resultMap id="MenuMap" type="com.spring.menu.vo.MenuVo">
+	  <result property="menu_id"    column="MENU_ID"    javaType="String"/>
+      <result property="menu_name"  column="MENU_NAME"  javaType="String"/>
+      <result property="menu_seq"   column="MENU_SEQ"   javaType="int"/>
+    </resultMap>
+    
+     <!-- 목록 -->
+	<select id="MenuList" statementType="CALLABLE" resultType="com.spring.menu.vo.MenuVo">
+		{CALL PKG_MENU.PROC_MENU_LIST(
+    		#{result,  mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=MenuMap}
+    	)}
+	</select>
+	
+	<!-- 메뉴추가 -->
+	<insert id="InsertMenu" statementType="CALLABLE" parameterType="hashmap">
+		{CALL PKG_MENU.PROC_MENU_INSERT(
+    		#{menu_name,  mode=IN, jdbcType=VARCHAR}
+    	)}
+	</insert>
+	
+	<!-- 메뉴selelct -->
+	<select id="SelectMenu" statementType="CALLABLE" parameterType="hashmap" resultType="com.spring.menu.vo.MenuVo">
+		{CALL PKG_MENU.PROC_MENU_SELECT(
+			#{menu_id,    mode=IN, jdbcType=VARCHAR},
+			#{result,  mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=MenuMap}
+		)}
+	</select>
+	
+	<!-- 메뉴수정 -->
+	<update id="UpdateMenu" statementType="CALLABLE" parameterType="hashmap">
+		{CALL PKG_MENU.PROC_MENU_UPDATE(
+			#{menu_id,    mode=IN, jdbcType=VARCHAR},
+			#{menu_name,  mode=IN, jdbcType=VARCHAR},
+			#{menu_seq,  mode=IN, jdbcType=INTEGER}
+		)}
+	</update>
+	
+	<!-- 메뉴삭제 -->
+	<delete id="DeleteMenu" statementType="CALLABLE" parameterType="hashmap"> 
+		{CALL PKG_MENU.PROC_MENU_DELETE(
+			#{menu_id,    mode=IN, jdbcType=VARCHAR}
+		)}
+	</delete>
+  </mapper>
